@@ -149,7 +149,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-2">
             <Bot className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">mChat - AI Response Comparison</h1>
+            <h1 className="text-2xl font-bold text-gray-900">mChat - Multi AI Response Comparisons</h1>
           </div>
         </div>
       </header>
