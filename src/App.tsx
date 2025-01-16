@@ -84,7 +84,7 @@ function App() {
     // #"sk-604904899c4345398f0cedb0862e5ada"
     const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnZGdkanVyaWNAZ21haWwuY29tIiwiaWF0IjoxNzM3MDAwMDUwfQ.U97aENvybV8RDOo2Fmfish5LyeYRI7V0YuKALZ39uuk"
 
-    const url = "https://api.hyperbolic.xyz/v1/chat/completions/";
+    const url = "https://api.hyperbolic.xyz/v1/chat/completions";
     const headers = {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${api_key}`
@@ -96,8 +96,9 @@ function App() {
           { role: "system", content: "You are a helpful assistant." },
           { role: "user", content: prompt}
       ],
-      temperature: 0.7,
-      max_tokens: 800
+      temperature: 0.1,
+      max_tokens: 800,
+      stream: false
     }
 
     const jsonBody = JSON.stringify(data)
@@ -114,7 +115,8 @@ function App() {
       }
 
       const data = await response.json();
-      return data.candidates[0].content.parts[0].text;
+      return data.choices[0].message.content;
+
     } catch (error) {
       console.error('Error:', error);
       return `Error: Failed to get response from DeepSeek`;
