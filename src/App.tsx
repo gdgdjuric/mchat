@@ -80,6 +80,47 @@ function App() {
     }
   };
 
+  const callDeepSeek = async (prompt: string) => {
+    // #"sk-604904899c4345398f0cedb0862e5ada"
+    const api_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJnZGdkanVyaWNAZ21haWwuY29tIiwiaWF0IjoxNzM3MDAwMDUwfQ.U97aENvybV8RDOo2Fmfish5LyeYRI7V0YuKALZ39uuk"
+
+    const url = "https://api.hyperbolic.xyz/v1/chat/completions/";
+    const headers = {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${api_key}`
+    };
+
+    const data = {
+      model: "deepseek-ai/DeepSeek-V3",
+      messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: prompt}
+      ],
+      temperature: 0.7,
+      max_tokens: 800
+    }
+
+    const jsonBody = JSON.stringify(data)
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: jsonBody
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+      console.error('Error:', error);
+      return `Error: Failed to get response from DeepSeek`;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
@@ -123,6 +164,24 @@ function App() {
       }));
     }
 
+    // Call DeepSeek API
+    try {
+      const deepSeekResponse = await callDeepSeek(prompt);
+      setResponses(prev => prev.map(r => {
+        if (r.model === 'DeepSeek') {
+          return { ...r, loading: false, response: deepSeekResponse };
+        }
+        return r;
+      }));
+    } catch (error) {
+      setResponses(prev => prev.map(r => {
+        if (r.model === 'DeepSeek') {
+          return { ...r, loading: false, response: 'Error: Failed to get response' };
+        }
+        return r;
+      }));
+    }
+
     // Simulate remaining AI responses for demonstration
     setTimeout(() => {
       setResponses(prev => prev.map(r => {
@@ -133,14 +192,6 @@ function App() {
       }));
     }, 2000);
 
-    setTimeout(() => {
-      setResponses(prev => prev.map(r => {
-        if (r.model === 'DeepSeek') {
-          return { ...r, loading: false, response: `DeepSeek mock response to: ${prompt}` };
-        }
-        return r;
-      }));
-    }, 2500);
   };
 
   return (
