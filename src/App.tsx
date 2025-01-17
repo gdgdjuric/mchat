@@ -8,7 +8,7 @@ interface AIResponse {
 }
 
 function App() {
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState('What is the capital of New Zealand? Can you find the GPS coordinates and address for the New Zealand Parliament?');
   const [responses, setResponses] = useState<AIResponse[]>([
     { model: 'ChatGPT', response: '', loading: false },
     { model: 'Gemini', response: '', loading: false },
@@ -214,7 +214,7 @@ function App() {
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Enter your prompt here..."
+              placeholder="What is the capital of New Zealand? Can you find the GPS coordinates and address for the New Zealand Parliament?"
               className="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-4 text-lg"
             />
             <button
